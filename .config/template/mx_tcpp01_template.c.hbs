@@ -1,0 +1,99 @@
+{{!--
+  ******************************************************************************
+  * file           : mx_tcpp01_template.c.hbs
+  * brief          : Code generation for the TCPP01 part driver.
+  ******************************************************************************
+  * attention
+  *
+  * Copyright (c) 2026 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+~--}}
+/**
+  ******************************************************************************
+  * file           : mx_tcpp01.c
+  * brief          : Code generation for the TCPP01 part driver.
+  ******************************************************************************
+  * attention
+  *
+  * Copyright (c) {{#unless (eq 2026 (toInt (year)))}}2026-{{/unless}}{{year}} STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the mx_tcpp01_license.md file
+  * in the same directory as the generated code.
+  * If no mx_tcpp01_license.md file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
+
+/* Define to prevent recursive inclusion -------------------------------------*/
+
+{{assign 'tcpp01_instances' (@root.SWConfigurationAPI.getInstances  "STMicroelectronics::Board Part:STM32CubeMX2 Config:TCPP01")~}}
+
+/* Includes ------------------------------------------------------------------*/
+#include "mx_tcpp01.h"
+
+{{#each @root.tcpp01_instances}}
+{{assign 'ctx' (@root.SWConfigurationAPI.getSwInstanceConfiguration this)~}}
+static tcpp01_obj_t  tcpp01_{{@index}}_obj;
+{{/each}}
+
+/**
+  * @brief initialize the IO layer.
+  * @param  pio      pointer to the part IO structure.
+  * @retval error status.
+  */
+int32_t tcpp01_io_init(tcpp01_io_t *pio)
+{
+  /* Part Status */
+  int ret = 0;
+
+  switch (pio->id)
+  {
+{{#each @root.tcpp01_instances}}
+{{assign 'ctx' (@root.SWConfigurationAPI.getSwInstanceConfiguration this)~}}
+{{#with @root.ctx}}
+    case TCPP01_{{@index}}:
+{{#if (eq info.interface 'ADC_EXTI')}}
+      pio->phadc        = TCPP01_{{@index}}_ADC_GETHANDLE();
+      pio->db_port      = TCPP01_{{@index}}_DB_GPIO_PORT;
+      pio->db_pin       = TCPP01_{{@index}}_DB_PIN;
+      pio->active_state = TCPP01_{{@index}}_DB_ACTIVE_STATE;
+      pio->phexti       = TCPP01_{{@index}}_EXTI_GETHANDLE();
+      pio->irq_line     = TCPP01_{{@index}}_IRQ_LINE;
+      pio->int_port     = TCPP01_{{@index}}_INT_GPIO_PORT;
+      pio->int_pin      = TCPP01_{{@index}}_INT_PIN;
+      pio->Ra           = TCPP01_{{@index}}_VBUS_RA;
+      pio->Rb           = TCPP01_{{@index}}_VBUS_RB;
+      pio->Vdd          = TCPP01_{{@index}}_VDD;
+
+{{/if}}
+      break;
+
+{{/with}}
+{{/each}}
+    default:
+      /* Error -- Unknown ID */
+      ret = -1;
+      break;
+  }
+
+  return ret;
+}
+
+{{#each @root.tcpp01_instances}}
+{{assign 'ctx' (@root.SWConfigurationAPI.getSwInstanceConfiguration this)~}}
+/**
+  * @brief Function to retrieve the Part object {{@index}}.
+  * @retval part object.
+  */
+tcpp01_obj_t *mx_tcpp01_{{@index}}_getobject(void)
+{
+  return &tcpp01_{{@index}}_obj;
+}
+{{/each}}

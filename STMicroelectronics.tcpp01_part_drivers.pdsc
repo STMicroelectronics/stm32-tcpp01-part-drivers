@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:stm32="https://developer.st.com/schemas/stm32cube/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="1.7.55" xsi:noNamespaceSchemaLocation="PACK.xsd" xsi:schemaLocation="https://developer.st.com/schemas/stm32cube/1.0.0 stm32cube.xsd">
+  <vendor>STMicroelectronics</vendor>
+  <name>tcpp01_part_drivers</name>
+  <description>TCPP01 Part Drivers SW Pack</description>
+  <url>https://developer.st.com/st-pack-server/api/v1/pack/</url>
+  <repository type="git">https://github.com/STMicroelectronics/stm32-tcpp01-part-drivers</repository>
+  <license>LICENSE.md</license>
+  <environments>
+    <environment name="STM32Cube">
+      <stm32:pack type="PARTDRV" friendlyName="tcpp01" shortDesc="tcpp01 part driver">
+        <relocation-info parent="part_drivers" layer="" element=""/>
+        <compatibility>
+          <release version="2.0.0">
+            <applicable-schema schemaType="sw-configuration" schemaVersion="3.8.0"/>
+            <applicable-api-group apiType="codegen-getters">
+              <applicable-api apiType="ExtiAPI" apiVersion="1.0.0"/>
+              <applicable-api apiType="pinoutAPI" apiVersion="1.0.0"/>
+              <applicable-api apiType="SWConfigurationAPI" apiVersion="1.0.0"/>
+            </applicable-api-group>
+          </release>
+        </compatibility>
+      </stm32:pack>
+    </environment>
+  </environments>
+  <ECCN>
+    <ECCN-EU>NEC</ECCN-EU>
+    <ECCN-US>EAR99</ECCN-US>
+  </ECCN>
+  <changelogs>
+    <changelog id="Release Notes" name="Release_Notes.html"/>
+  </changelogs>
+  <releases>
+    <release version="2.0.0" date="2026-08-25">
+      Refer to Release_Notes.md for release details.
+    </release>
+  </releases>
+  <keywords>
+    <keyword>ST</keyword>
+    <keyword>STMicroelectronics Board Part Package</keyword>
+    <keyword>BSP</keyword>
+    <keyword>Parts</keyword>
+    <keyword>Drivers</keyword>
+    <keyword>TCPP01</keyword>
+    <keyword>USBPD</keyword>
+  </keywords>
+  <conditions>
+    <condition id="TCPP01 Core Condition">
+      <description>STMicroelectronics TCPP01 Core Driver</description>
+      <require Cclass="Board Part" Cgroup="USBPD" Csub="TCPP01 IO"/>
+    </condition>
+    <condition id="TCPP01 IO ADC EXTI Condition">
+      <description>STMicroelectronics TCPP01 IO ADC Polling and EXTI Drivers</description>
+      <require Cclass="Device" Cgroup="STM32 HAL" Csub="ADC"/>
+      <require Cclass="Device" Cgroup="STM32 HAL" Csub="EXTI"/>
+    </condition>
+    <condition id="TCPP01 Custom IO Condition">
+
+    </condition>
+    <condition id="TCPP01 CFG Condition">
+      <description>STMicroelectronics configuration for TCPP01 part driver</description>
+    </condition>
+  </conditions>
+  <generators>
+    <generator id="tcpp01_mx2codegen">
+      <description>ST Microelectronics: STM32 Cube Code Generator for TCPP01 Drivers Pack</description>
+      <exe>
+        <command host="win">.config/gen_code.bat</command>
+        <command host="linux">.config/gen_code.sh</command>
+        <command host="mac">.config/gen_code.sh</command>
+        <argument>tcpp01_mx2codegen</argument>
+        <argument>$G</argument>
+        <argument>STMicroelectronics.tcpp01_part_drivers.gpdsc.hbs</argument>
+        <argument mode="dry-run">--dry-run</argument>
+      </exe>
+      <gpdsc name="$P/STMicroelectronics.tcpp01_part_drivers.gpdsc"/>
+    </generator>
+  </generators>
+  <components>
+    <component Cvendor="STMicroelectronics" Cclass="Board Part" Cgroup="USBPD" Csub="TCPP01 Core" Cversion="1.0.0" condition="TCPP01 Core Condition">
+      <description>Driver for TCPP01 part</description>
+      <files>
+        <file category="doc" name="README.md"/>
+        <file category="doc" name="SW_Security_Level.md"/>
+        <file category="doc" name="doc/st_logo.png"/>
+        <file category="header" name="tcpp01.h"/>
+        <file category="source" name="tcpp01.c"/>
+      </files>
+    </component>
+    <component Cvendor="STMicroelectronics" Cclass="Board Part" Cgroup="USBPD" Csub="TCPP01 IO" Cvariant="ADC EXTI" Cversion="1.0.0" condition="TCPP01 IO ADC EXTI Condition">
+      <description>ADC EXTI IO for TCPP01 part</description>
+      <files>
+        <file category="header" name="interfaces/adc_exti/tcpp01_io.h"/>
+        <file category="source" name="interfaces/adc_exti/tcpp01_io.c"/>
+      </files>
+    </component>
+    <component Cvendor="STMicroelectronics" Cclass="Board Part" Cgroup="USBPD" Csub="TCPP01 IO" Cvariant="Custom" Cversion="1.0.0" condition="TCPP01 Custom IO Condition">
+      <description>Custom I/O layer for TCPP01 part</description>
+      <files>
+        <file category="header" name="interfaces/custom/tcpp01_io.h"/>
+        <file category="source" name="interfaces/custom/tcpp01_io.c"/>
+      </files>
+    </component>
+    <component generator="tcpp01_mx2codegen" Cclass="Board Part" Cgroup="STM32CubeMX2 Config" Csub="TCPP01" Cversion="1.0.0" condition="TCPP01 CFG Condition" maxInstances="10">
+      <description>TCPP01 STM32CubeMX2 Config</description>
+      <environments>
+        <environment name="STM32Cube">
+          <stm32:component>
+            <supported-part-types>
+              <supported-part-type Hvendor="STMicroelectronics" Hname="TCPP01-M12"/>
+            </supported-part-types>
+          </stm32:component>
+        </environment>
+      </environments>
+      <files>
+        <file category="genAsset" name=".config/gen_code.bat"/>
+        <file category="genAsset" name=".config/gen_code.sh"/>
+        <file category="genAsset" name=".config/STMicroelectronics.tcpp01_part_drivers.gpdsc.hbs"/>
+        <file category="genAsset" name=".config/mx_tcpp01_parameters.json"/>
+        <file category="genAsset" name=".config/template/helpers/adc_helpers.js"/>
+        <file category="genAsset" name=".config/template/mx_tcpp01_template.h.hbs"/>
+        <file category="genAsset" name=".config/template/mx_tcpp01_template.c.hbs"/>
+        <file category="genAsset" name=".config/template/mx_tcpp01_license_template.md.hbs"/>
+        <file category="genAsset" name=".config/template/hooks/mapping_hook.js"/>
+      </files>
+    </component>
+  </components>
+</package>
